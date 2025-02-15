@@ -39,9 +39,9 @@ def openSerial(port, baud, timeout):
 # Handle custom commands
 #
 def handle_custom_commands(line, tftSerial):
-    if line == b'M115\n':
+    if line == b'M115\n':   #initial printer capabilities
         response = (
-            f"FIRMWARE_NAME:Marlin EXTRUDER_COUNT:{machine_extruder_count}\n"
+            f"FIRMWARE_NAME:Klipper EXTRUDER_COUNT:{machine_extruder_count}\n"
             f"Cap:AUTOLEVEL:{machine_autolevel}\n"
             f"Cap:EEPROM:0\n"
             f"Cap:Z_PROBE:{machine_zprobe}\n"
@@ -54,6 +54,14 @@ def handle_custom_commands(line, tftSerial):
         tftSerial.write(b'ok\n')
         print('Responding with M115 custom response')
         print(response.encode('utf-8'))
+        return True
+    
+    if line == b'M220\n':   #query speed percentage ( )
+        tftSerial.write(b'ok/n')
+        return True
+    
+    if line == b'M221\n':   #query flow percentage ( )
+        tftSerial.write(b'ok/n')
         return True
 
     unknown_commands = {
@@ -89,10 +97,10 @@ def translate_command(line):
 # Print method with suppression checks
 #
 def print_filtered(tag, line):
-    suppress_list = [b'ok\n', b'echo:busy: processing\n',b'M220\n',b'M221\n',b'M114\n']
+    #suppress_list = [b'ok\n', b'echo:busy: processing\n',b'M220\n',b'M221\n',b'M114\n']
 
-    if line not in suppress_list:
-        print(f'{tag}: ', line)
+    #if line not in suppress_list:
+    print(f'{tag}: ', line)
 
 #
 # Read input from TFT and forward it to Klipper
