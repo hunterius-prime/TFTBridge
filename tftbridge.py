@@ -18,6 +18,11 @@ class TftBridge:
 		self.klipperDevice = config.get('klipper_device')
 		self.klipperBaud = config.getint('klipper_baud')
 		self.klipperTimeout = config.getint('klipper_timeout')
+		self.machine_extruder_count = config.getint('machine_extruder_count')
+		self.machine_zprobe = config.getint('machine_zprobe')
+		self.machine_autoreport_pos = config.getint('machine_autoreport_pos')
+		self.machine_autoreport_temp = config.getint('machine_autoreport_temp')
+		self.machine_autolevel = config.getint('machine_autolevel')
 		#
 		#connections to TFT and Klipper serial ports
 		#
@@ -69,6 +74,53 @@ class TftBridge:
 		threading.Thread(target=self.klipper2tft).start()
 
 	#
+	# Handle custom commands
+	#
+	def handle_custom_commands(self, line):
+		if line == b'M115\n':
+			response = (
+				f"FIRMWARE_NAME:Marlin EXTRUDER_COUNT:{self.machine_extruder_count}\n"
+				f"Cap:AUTOLEVEL:{self.machine_autolevel}\n"
+				f"Cap:EEPROM:0\n"
+				f"Cap:Z_PROBE:{self.machine_zprobe}\n"
+				f"Cap:LEVELING_DATA:1\n"
+				f"Cap:AUTOREPORT_POS:{self.machine_autoreport_pos}\n"
+				f"Cap:AUTOREPORT_TEMP:{self.machine_autoreport_temp}\n"
+			)
+			
+			self.tftSerial.write(response.encode('utf-8'))
+			self.tftSerial.write(b'ok\n')
+			return True
+
+		unknown_commands = {
+			b'M92\n': 'M92',
+			b'M503\n': 'M503',
+			b'M500\n': 'M500',
+			# Add more commands as needed
+		}
+
+		if line in unknown_commands:
+			command = unknown_commands[line]
+			response = f'// Unknown command:"{command}"\n'
+			self.tftSerial.write(response.encode('utf-8'))
+			self.tftSerial.write(b'ok\n')
+			return True
+		
+		return False
+
+	#
+	# Translate incoming commands
+	#
+	def translate_command(line):
+		command_mapping = {
+			b'G34\n': b'Z_TILT_ADJUST\n',
+			b'M108\n': b'CANCEL_PRINT\n',
+			# Add more commands as needed
+		}
+		
+		return command_mapping.get(line, line)
+
+	#
 	#forward data from TFT to Klipper
 	#
 	def tft2klipper(self):
@@ -88,6 +140,15 @@ class TftBridge:
 				try:
 					line=self.tftSerial.readline()
 					if line!='':			#if readline timeout, it returns an empty str
+
+						# Check for custom commands and respond and not process further
+						if self.handle_custom_commands(self, line):
+							continue
+						
+						# Translate the command if needed to kliper format
+						line = self.translate_command(line)
+
+						
 						self.klipperSerial.write(line)
 				except:
 					pass
