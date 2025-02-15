@@ -80,7 +80,7 @@ class TftBridge:
     def handle_custom_commands(self, line):
         if line == b'M115\n':
             response = (
-                f"FIRMWARE_NAME:Marlin EXTRUDER_COUNT:{self.machine_extruder_count}\n"
+                f"FIRMWARE_NAME:Klipper EXTRUDER_COUNT:{self.machine_extruder_count}\n"
                 f"Cap:AUTOLEVEL:{self.machine_autolevel}\n"
                 f"Cap:EEPROM:0\n"
                 f"Cap:Z_PROBE:{self.machine_zprobe}\n"
