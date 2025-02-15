@@ -1,7 +1,7 @@
 #
-#BigTreeTech TFT35 bridge
+#BigTreeTech TFT bridge
 #
-#Author: K. Hui
+#Author: K. Hui, Hunterius
 #
 import serial
 import threading
@@ -19,7 +19,7 @@ class TftBridge:
 		self.klipperBaud = config.getint('klipper_baud')
 		self.klipperTimeout = config.getint('klipper_timeout')
 		#
-		#connections to TFT35 and Klipper serial ports
+		#connections to TFT and Klipper serial ports
 		#
 		self.tftSerial = None
 		self.klipperSerial = None
@@ -69,7 +69,7 @@ class TftBridge:
 		threading.Thread(target=self.klipper2tft).start()
 
 	#
-	#forward data from TFT35 to Klipper
+	#forward data from TFT to Klipper
 	#
 	def tft2klipper(self):
 		while True:
@@ -78,11 +78,11 @@ class TftBridge:
 			#
 			if self.stopEvent.is_set():
 				if self.tftSerial!=None:
-					self.tftSerial.close()		#close connection to TFT35
+					self.tftSerial.close()		#close connection to TFT
 				self.tftSerial=None			#clear property
 				break
 			#
-			#otherwise read from TFT35 and forward to Klipper
+			#otherwise read from TFT and forward to Klipper
 			#
 			if self.tftSerial!=None and self.klipperSerial!=None:
 				try:
@@ -93,7 +93,7 @@ class TftBridge:
 					pass
 
 	#
-	#forward data from Klipper to TFT35
+	#forward data from Klipper to TFT
 	#
 	def klipper2tft(self):
 		while True:
@@ -106,7 +106,7 @@ class TftBridge:
 				self.klipperSerial=None			#clear property
 				break
 			#
-			#otherwise read from Klipper and forward to TFT35
+			#otherwise read from Klipper and forward to TFT
 			#
 			if self.tftSerial!=None and self.klipperSerial!=None:
 				try:
