@@ -13,7 +13,8 @@ So far if implemented or working out of the box:
 - Z tilt adjustment 
 - basic printer capabilities reporting for enabling parts of menu based on enabled capabilities 
 - BLTouch menu / control
-- printing from SDCARD or USB (not perfect but 80% usable)
+- printing from SDCARD slot on TFT or USB (not perfect but 80% usable)
+- printing from host(klipper) file list 
 
 
 ## Hardware Connection
