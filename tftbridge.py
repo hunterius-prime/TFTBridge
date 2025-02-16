@@ -22,7 +22,6 @@ class TftBridge:
         self.machine_extruder_count = config.getint('machine_extruder_count')
         self.machine_zprobe = config.getint('machine_zprobe')
         self.machine_autoreport_pos = config.getint('machine_autoreport_pos')
-        self.machine_autoreport_temp = config.getint('machine_autoreport_temp')
         self.machine_autolevel = config.getint('machine_autolevel')
         #
         # connections to TFT and Klipper serial ports
@@ -86,7 +85,7 @@ class TftBridge:
                 f"Cap:Z_PROBE:{self.machine_zprobe}\n"
                 f"Cap:LEVELING_DATA:1\n"
                 f"Cap:AUTOREPORT_POS:{self.machine_autoreport_pos}\n"
-                f"Cap:AUTOREPORT_TEMP:{self.machine_autoreport_temp}\n"
+                f"Cap:AUTOREPORT_TEMP:0\n"
             )
 
             self.tftSerial.write(response.encode('utf-8'))

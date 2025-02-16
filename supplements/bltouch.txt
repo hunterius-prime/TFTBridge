@@ -1,0 +1,4 @@
+self test 	b'M280 P0 S120\n'	BLTOUCH_DEBUG COMMAND=self_test
+deploy		b'M280 P0 S10\n'	BLTOUCH_DEBUG COMMAND=pin_down
+retract		b'M280 P0 S90\n'	BLTOUCH_DEBUG COMMAND=pin_up
+reset		b'M280 P0 S160\n'	BLTOUCH_DEBUG COMMAND=reset

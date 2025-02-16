@@ -21,8 +21,6 @@ printerBaud = config.getint('printer', 'klipper_baud')
 printerTimeout = config.getint('printer', 'klipper_timeout')
 machine_extruder_count = config.getint('printer', 'machine_extruder_count')
 machine_zprobe = config.getint('printer', 'machine_zprobe')
-machine_autoreport_pos = config.getint('printer', 'machine_autoreport_pos')
-machine_autoreport_temp = config.getint('printer', 'machine_autoreport_temp')
 machine_autolevel = config.getint('printer', 'machine_autolevel')
 
 #
@@ -46,8 +44,7 @@ def handle_custom_commands(line, tftSerial):
             f"Cap:EEPROM:0\n"
             f"Cap:Z_PROBE:{machine_zprobe}\n"
             f"Cap:LEVELING_DATA:1\n"
-            f"Cap:AUTOREPORT_POS:{machine_autoreport_pos}\n"
-            f"Cap:AUTOREPORT_TEMP:{machine_autoreport_temp}\n"
+            f"Cap:AUTOREPORT_TEMP:0\n"
         )
         
         tftSerial.write(response.encode('utf-8'))
@@ -88,6 +85,10 @@ def translate_command(line):
     command_mapping = {
         b'G34\n': b'Z_TILT_ADJUST\n',
         b'M108\n': b'CANCEL_PRINT\n',
+        b'M280 P0 S120\n': b'BLTOUCH_DEBUG COMMAND=self_test\n',#bltouch
+        b'M280 P0 S10\n': b'BLTOUCH_DEBUG COMMAND=pin_down\n',#bltouch
+        b'M280 P0 S90\n': b'BLTOUCH_DEBUG COMMAND=pin_up\n',#bltouch
+        b'M280 P0 S160\n': b'BLTOUCH_DEBUG COMMAND=reset\n',#bltouch
         # Add more commands as needed
     }
     
@@ -108,7 +109,7 @@ def print_filtered(tag, line):
 def tft2klipper(tftSerial, klipperSerial):
     while True:
         line = tftSerial.readline()
-        print_filtered('tft->Klipper: ', line)
+        print_filtered('tft->: ', line)
 
         # Check for custom commands and respond and not process further
         if handle_custom_commands(line, tftSerial):
@@ -125,7 +126,7 @@ def tft2klipper(tftSerial, klipperSerial):
 def klipper2tft(tftSerial, klipperSerial):
     while True:
         line = klipperSerial.readline()
-        print_filtered('Klipper->tft: ', line)
+        print_filtered('Klipper->: ', line)
         tftSerial.write(line)
 
 def main():
