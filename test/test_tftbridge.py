@@ -45,6 +45,7 @@ def handle_custom_commands(line, tftSerial):
             f"Cap:Z_PROBE:{machine_zprobe}\n"
             f"Cap:LEVELING_DATA:1\n"
             f"Cap:AUTOREPORT_TEMP:0\n"
+            f"Cap:AUTOREPORT_POS:0\n"
         )
         
         tftSerial.write(response.encode('utf-8'))
@@ -84,7 +85,10 @@ def handle_custom_commands(line, tftSerial):
 def translate_command(line):
     command_mapping = {
         b'G34\n': b'Z_TILT_ADJUST\n',
-        b'M108\n': b'CANCEL_PRINT\n',
+        #b'M108\n': b'CANCEL_PRINT\n',
+        b'M524\n': b'CANCEL_PRINT\n',
+        b'M25 P1\n': b'PAUSE\n',
+        b'M24\n': b'RESUME\n',
         b'M280 P0 S120\n': b'BLTOUCH_DEBUG COMMAND=self_test\n',#bltouch
         b'M280 P0 S10\n': b'BLTOUCH_DEBUG COMMAND=pin_down\n',#bltouch
         b'M280 P0 S90\n': b'BLTOUCH_DEBUG COMMAND=pin_up\n',#bltouch

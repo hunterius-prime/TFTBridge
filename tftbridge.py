@@ -21,7 +21,6 @@ class TftBridge:
         self.klipperTimeout = config.getint('klipper_timeout')
         self.machine_extruder_count = config.getint('machine_extruder_count')
         self.machine_zprobe = config.getint('machine_zprobe')
-        self.machine_autoreport_pos = config.getint('machine_autoreport_pos')
         self.machine_autolevel = config.getint('machine_autolevel')
         #
         # connections to TFT and Klipper serial ports
@@ -84,7 +83,7 @@ class TftBridge:
                 f"Cap:EEPROM:0\n"
                 f"Cap:Z_PROBE:{self.machine_zprobe}\n"
                 f"Cap:LEVELING_DATA:1\n"
-                f"Cap:AUTOREPORT_POS:{self.machine_autoreport_pos}\n"
+                f"Cap:AUTOREPORT_POS:0\n"
                 f"Cap:AUTOREPORT_TEMP:0\n"
             )
 
@@ -113,9 +112,16 @@ class TftBridge:
     #
     def translate_command(self, line):
         command_mapping = {
-            b'G34\n': b'Z_TILT_ADJUST\n',
-            b'M108\n': b'CANCEL_PRINT\n',
-            # Add more commands as needed
+                    b'G34\n': b'Z_TILT_ADJUST\n',
+                    #b'M108\n': b'CANCEL_PRINT\n',
+                    b'M524\n': b'CANCEL_PRINT\n',
+                    b'M25 P1\n': b'PAUSE\n',
+                    b'M24\n': b'RESUME\n',
+                    b'M280 P0 S120\n': b'BLTOUCH_DEBUG COMMAND=self_test\n',#bltouch
+                    b'M280 P0 S10\n': b'BLTOUCH_DEBUG COMMAND=pin_down\n',#bltouch
+                    b'M280 P0 S90\n': b'BLTOUCH_DEBUG COMMAND=pin_up\n',#bltouch
+                    b'M280 P0 S160\n': b'BLTOUCH_DEBUG COMMAND=reset\n',#bltouch
+                    # Add more commands as needed
         }
 
         return command_mapping.get(line, line)
