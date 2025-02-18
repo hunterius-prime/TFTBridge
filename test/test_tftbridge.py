@@ -83,16 +83,10 @@ def handle_custom_commands(line, tftSerial):
 # Translate incoming commands
 #
 def translate_command(line):
+    #some commands moved to gcode macros of klipper
     command_mapping = {
-        b'G34\n': b'Z_TILT_ADJUST\n',
         #b'M108\n': b'CANCEL_PRINT\n',
-        b'M524\n': b'CANCEL_PRINT\n',
-        b'M25 P1\n': b'PAUSE\n',
-        b'M24\n': b'RESUME\n',
-        b'M280 P0 S120\n': b'BLTOUCH_DEBUG COMMAND=self_test\n',#bltouch
-        b'M280 P0 S10\n': b'BLTOUCH_DEBUG COMMAND=pin_down\n',#bltouch
-        b'M280 P0 S90\n': b'BLTOUCH_DEBUG COMMAND=pin_up\n',#bltouch
-        b'M280 P0 S160\n': b'BLTOUCH_DEBUG COMMAND=reset\n',#bltouch
+
         # Add more commands as needed
     }
     
