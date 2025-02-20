@@ -14,7 +14,7 @@ So far if implemented or working out of the box:
 - basic printer capabilities reporting for enabling parts of menu based on enabled capabilities 
 - BLTouch menu / control
 - printing from SDCARD slot on TFT or USB (not perfect but 80% usable)
-- printing from host(klipper) file list 
+- printing from host(klipper) file list , PAUSE/RESUME working
 
 
 ## Hardware Connection
@@ -28,22 +28,15 @@ Host add-ons will be in the  `/home/pi/klipper/klippy/extras` folder.
 To install `tftbridge` as a Klipper add-on:
 
 1. Copy `tftbridge.py` into `/home/pi/klipper/klippy/extras`
-1. In your standard printer.cfg file, add the following section:
+1. Copy `tftbridge.cfg` into `/home/pi/printer_data/config`
+1. In your standard printer.cfg file (or in overrides.cfg in case you are using klippain), add the following section:
 
 ```
-[tftbridge]
-tft_device: /dev/ttyAMA0
-tft_baud: 250000
-tft_timeout: 0
-klipper_device: /home/pi/printer_data/comms/klippy.serial
-klipper_baud: 250000
-klipper_timeout: 0
-
-machine_extruder_count : 1
-machine_zprobe : 1
-machine_autoreport_pos : 0
-machine_autoreport_temp : 1
-machine_autolevel : 1
+#-------------------------#
+#   CUSTOM TFT GCODE      #
+#-------------------------#
+## for BTT TFT integration
+[include tftbridge.cfg]
 ```
 
 If your configuration is different, you may need to customise the above settings.
