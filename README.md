@@ -5,7 +5,7 @@ Part of this project will be modified firmware for TFT display ( right now still
 # Implemented Features
 
 As it is still "work-in-progress" project, please do not expect everything translated.
-So far if implemented or working out of the box:
+So far is implemented or working out of the box:
 - temperature control and monitoring
 - movement control and monitoring
 - fans control
@@ -18,7 +18,7 @@ So far if implemented or working out of the box:
 
 
 ## Hardware Connection
-For the general idea of the connection and hardware connection, please refer to [my post here](https://oldhui.wordpress.com/2024/01/28/using-btt-tft35-with-klipper-in-touch-mode/).
+For the general idea of the connection and hardware connection, please refer to [original author post here](https://oldhui.wordpress.com/2024/01/28/using-btt-tft35-with-klipper-in-touch-mode/).
 
 
 ## Software Setup
@@ -39,7 +39,7 @@ To install `tftbridge` as a Klipper add-on:
 [include tftbridge.cfg]
 ```
 
-If your configuration is different, you may need to customise the above settings.
+If your configuration is different, you may need to customize the above settings.
 `ttf_device` is based on your hardware connection on PI board.
 froo example, in OrangePI Zero and UART1 serial connection it will be `/dev/ttyS1`
 
