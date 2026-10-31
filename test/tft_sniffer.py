@@ -55,11 +55,11 @@ def handle_custom_commands(line, tftSerial):
         return True
     
     if line == b'M220\n':   #query speed percentage ( )
-        tftSerial.write(b'ok/n')
+        tftSerial.write(b'ok\n')
         return True
-    
+
     if line == b'M221\n':   #query flow percentage ( )
-        tftSerial.write(b'ok/n')
+        tftSerial.write(b'ok\n')
         return True
 
     unknown_commands = {
